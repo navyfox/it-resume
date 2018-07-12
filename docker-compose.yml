@@ -4,6 +4,7 @@ services:
         build: ./docker/symfony
         volumes:
             - /var/www/it-resume
+            - ./symfony/:/var/www/it-resume
     nginx:
         image: nginx:1.13.0-alpine
         volumes:
@@ -19,6 +20,7 @@ services:
         build: ./docker/drupal
         volumes:
             - /var/www/html
+            - ./drupal/:/var/www/html
     db:
         image: mysql:5
         ports:
