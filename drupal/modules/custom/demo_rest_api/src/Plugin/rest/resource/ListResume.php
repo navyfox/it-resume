@@ -131,10 +131,10 @@ class ListResume extends ResourceBase {
         /** @var \Drupal\node\Entity\Node $article */
         foreach ($articles as $article) {
             $response['items'][] = [
-                'field_last_name'=> $article-> get('field_last_name'),
                 'title' => $article->label(),
-                'field_first_name' => $article->get('field_first_name'),
-                'field_skills' => $article->get('field_skills'),
+                'field_first_name' => $article->field_first_name->value,
+                'field_last_name'=> $article->field_last_name->value,
+                'field_skills' => $article->field_skills->value,
             ];
         }
 
