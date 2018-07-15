@@ -27,3 +27,10 @@ test_api.delete:
   methods:  [DELETE]
   requirements:
     _access: 'TRUE'
+
+test_api_resume.get:
+  path: 'my-api/resume.json'
+  defaults: { _controller: '\Drupal\test_api\Controller\TestAPIController::get_resume' }
+  methods:  [GET]
+  requirements:
+      _access: 'TRUE'

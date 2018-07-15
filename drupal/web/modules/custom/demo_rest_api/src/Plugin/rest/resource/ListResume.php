@@ -7,6 +7,7 @@ use Drupal\Core\Url;
 use Drupal\rest\Plugin\ResourceBase;
 use Drupal\rest\ResourceResponse;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
@@ -138,7 +139,8 @@ class ListResume extends ResourceBase {
             ];
         }
 
-        return new ResourceResponse($response, 200);
+//        return new ResourceResponse($response, 200);
+        return new JsonResponse($response, 200);
     }
 
 }
