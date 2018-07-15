@@ -1,0 +1,18 @@
+id: demo_resource
+plugin_id: demo_resource
+granularity: method
+configuration:
+  GET:
+    supported_formats:
+      - json
+    supported_auth:
+      - basic_auth
+id: list_resume
+plugin_id: list_resume
+granularity: method
+configuration:
+  GET:
+    supported_formats:
+      - json
+    supported_auth:
+      - basic_auth

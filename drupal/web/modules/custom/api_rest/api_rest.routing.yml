@@ -1,0 +1,6 @@
+new_module.list:
+  path: 'resume/list'
+  defaults:
+    _controller: '\Drupal\api_rest\Controller\ApiController::listAction'
+  requirements:
+    _permission: 'administer content'
