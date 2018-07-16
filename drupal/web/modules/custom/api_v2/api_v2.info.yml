@@ -1,5 +1,5 @@
-name: Test API
-type: module
+name: API V2
 description: Custom RESTful API module with GET/POST/PUT/DELETE etc.. method examples.
-author: Minnur Yunusov
+package: Custom
+type: module
 core: 8.x

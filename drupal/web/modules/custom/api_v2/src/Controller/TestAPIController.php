@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\test_api\Controller\TestAPIController.
+ * Contains \Drupal\api_v2\Controller\TestAPIController.
  */
 
-namespace Drupal\test_api\Controller;
+namespace Drupal\api_v2\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
 

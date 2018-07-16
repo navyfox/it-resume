@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\demo_rest_api\Plugin\rest\resource;
+namespace Drupal\api_v1\Plugin\rest\resource;
 
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\Url;
@@ -18,7 +18,7 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
  *   id = "list_resume",
  *   label = @Translation("List articles resource"),
  *   uri_paths = {
- *     "canonical" = "/demo_rest_api/list"
+ *     "canonical" = "/api_v1/resume"
  *   }
  * )
  */

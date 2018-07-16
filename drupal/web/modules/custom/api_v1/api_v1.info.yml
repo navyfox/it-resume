@@ -1,4 +1,4 @@
-name: Demo REST API
+name: REST API V1
 description: Define's a custom REST Resource
 package: Custom
 type: module

@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\demo_rest_api\Plugin\rest\resource;
+namespace Drupal\api_v1\Plugin\rest\resource;
 
 use Drupal\rest\Plugin\ResourceBase;
 use Drupal\rest\ResourceResponse;
@@ -12,7 +12,7 @@ use Drupal\rest\ResourceResponse;
  *   id = "demo_resource",
  *   label = @Translation("Demo Resource"),
  *   uri_paths = {
- *     "canonical" = "/demo_rest_api/demo_resource"
+ *     "canonical" = "/api_v1/demo_resource"
  *   }
  * )
  */
