@@ -4,9 +4,14 @@ namespace Drupal\api_v1\Plugin\rest\resource;
 
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\Url;
+use Drupal\node\Plugin\migrate\destination\EntityNodeType;
 use Drupal\rest\Plugin\ResourceBase;
 use Drupal\rest\ResourceResponse;
+use Drupal\Core\Entity\entity;
+use \Drupal\node\Entity\Node;
+use \Drupal\file\Entity\File;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
@@ -140,6 +145,39 @@ class ListResume extends ResourceBase {
         }
 
 //        return new ResourceResponse($response, 200);
+        return new JsonResponse($response, 200);
+    }
+
+    /**
+     * Responds to POST requests.
+     */
+    public function post( Request $request ) {
+//        if (!$this->currentUser->hasPermission('access content')) {
+//            throw new AccessDeniedHttpException();
+//        }
+//
+//        $request = [
+//            'create' => FALSE
+//        ];
+//
+//
+//        $node = Node::create([
+//            'type'        => 'resume',
+//            'title'       => 'Test Api',
+//            'field_first_name' => 'TED',
+//            'field_last_name'=> 'TTT',
+//            'field_skills' => 'java1',
+//        ]);
+//        $node->save();
+
+        if ( 0 === strpos( $request->headers->get( 'Content-Type' ), 'application/json' ) ) {
+            $data = json_decode( $request->getContent(), TRUE );
+            $request->request->replace( is_array( $data ) ? $data : [] );
+        }
+
+        $response['data'] = $data;
+        $response['method'] = 'POST';
+
         return new JsonResponse($response, 200);
     }
 

@@ -12,6 +12,8 @@ use Drupal\Core\Controller\ControllerBase;
 use Drupal\rest\ResourceResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use \Drupal\node\Entity\Node;
+use \Drupal\file\Entity\File;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
@@ -135,7 +137,7 @@ class TestAPIController extends ControllerBase {
   /**
    * Callback for `my-api/post.json` API method.
    */
-  public function post_example( Request $request ) {
+  public function post_resume( Request $request ) {
 
     // This condition checks the `Content-type` and makes sure to 
     // decode JSON string from the request body into array.
@@ -144,8 +146,17 @@ class TestAPIController extends ControllerBase {
       $request->request->replace( is_array( $data ) ? $data : [] );
     }
 
-    $response['data'] = 'Some test data to return';
+    $response['data'] = $data;
     $response['method'] = 'POST';
+
+    $node = Node::create([
+        'type'        => 'resume',
+        'title'       => $data['title'],
+        'field_first_name' => $data['field_first_name'],
+        'field_last_name'=> $data['field_last_name'],
+        'field_skills' => $data['field_skills'],
+    ]);
+    $node->save();
 
     return new JsonResponse( $response );
   }

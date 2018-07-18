@@ -15,8 +15,8 @@ test_api.put:
     _access: 'TRUE'
 
 test_api.post:
-  path: 'api_v2/post.json'
-  defaults: { _controller: '\Drupal\api_v2\Controller\TestAPIController::post_example' }
+  path: 'api_v2/resume'
+  defaults: { _controller: '\Drupal\api_v2\Controller\TestAPIController::post_resume' }
   methods:  [POST]
   requirements:
     _access: 'TRUE'
