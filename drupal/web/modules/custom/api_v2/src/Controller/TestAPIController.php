@@ -9,6 +9,7 @@ namespace Drupal\api_v2\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
 
+use Drupal\node\NodeInterface;
 use Drupal\rest\ResourceResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -102,12 +103,20 @@ class TestAPIController extends ControllerBase {
 
     /** @var \Drupal\node\Entity\Node $article */
     foreach ($articles as $article) {
-      $response['items'][] = [
+      $response_item = [
           'title' => $article->label(),
           'field_first_name' => "vfdvdf",
           'field_last_name'=> $article->field_last_name->value,
           'field_skills' => $article->field_skills->value,
+          'field_s2' => $article->field_s2,
       ];
+      $response_item['field_tags'] = [];
+      foreach($article->field_tags->getIterator() as $tagItem)
+      {
+        $term = \Drupal\taxonomy\Entity\Term::load($tagItem->target_id);
+        $response_item['field_tags'][] = $term->getName();
+      }
+      $response['items'][] = $response_item ;
     }
 
     return new JsonResponse($response, 200);
@@ -159,6 +168,37 @@ class TestAPIController extends ControllerBase {
     $node->save();
 
     return new JsonResponse( $response );
+  }
+
+
+  /**
+   * Callback for `my-api/edit` API method.
+   */
+  public function edit_resume( NodeInterface $node, Request $request ) {
+
+    // This condition checks the `Content-type` and makes sure to
+    // decode JSON string from the request body into array.
+    if ( 0 === strpos( $request->headers->get( 'Content-Type' ), 'application/json' ) ) {
+      $data = json_decode( $request->getContent(), TRUE );
+      $request->request->replace( is_array( $data ) ? $data : [] );
+    }
+
+//    $request_query = $request->query;
+
+    $response['data'] = $data;
+    $response['method'] = 'POST';
+
+//    $node = Node::load($node->id());
+//    var_dump($node); die();
+    $node->title = $data['title'];
+    $node->save();
+
+    return new JsonResponse( $response );
+  }
+
+  public function get_node (NodeInterface $node) {
+//    $node = Node::load($data['uid']);
+    return new JsonResponse( $node->id() );
   }
 
   /**

@@ -34,3 +34,25 @@ test_api_resume.get:
   methods:  [GET]
   requirements:
       _access: 'TRUE'
+
+api_resume_edit.post:
+  path: 'api_v2/resume/{node}'
+  defaults: { _controller: '\Drupal\api_v2\Controller\TestAPIController::edit_resume' }
+  methods:  [POST]
+  options:
+        parameters:
+          node:
+            type: entity:node
+  requirements:
+      _access: 'TRUE'
+
+test_api_resume_node.get:
+  path: 'api_v2/resume/{node}'
+  defaults: { _controller: '\Drupal\api_v2\Controller\TestAPIController::get_node' }
+  methods:  [GET]
+  options:
+      parameters:
+        node:
+          type: entity:node
+  requirements:
+      _access: 'TRUE'
