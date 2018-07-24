@@ -401,18 +401,23 @@ class TestAPIController extends ControllerBase {
         ->loadMultiple($result);
 
 
+
 //    $cat = $query;
 //    $terms = taxonomy_term_load_multiple_by_name($cat);
     $ctids = array();
 //    $newTerm = taxonomy_term_load_multiple_by_name($cat);
     foreach($terms as $key => $term) {
-      $ctids[] = $key;
+      $item = array(
+        'value' => $key,
+        'label' => $term->getName()
+      );
+      $ctids['terms'][] = $item;
     }
 
-    $response['status'] = true;
-    $response['method'] = 'GET';
+//    $response['status'] = true;
+//    $response['method'] = 'GET';
 
-    return new JsonResponse( $terms );
+    return new JsonResponse( $ctids );
   }
 
 

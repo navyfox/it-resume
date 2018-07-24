@@ -8,7 +8,10 @@ Encore
   .cleanupOutputBeforeBuild()
   .enableSourceMaps(!Encore.isProduction())
   .enableVersioning(Encore.isProduction())
-  .addEntry('app', './assets/js/app.js')
-  .enableReactPreset();
+  .addEntry('index', './assets/js/index.js')
+  .enableReactPreset()
+    .configureBabel(function(babelConfig) {
+        babelConfig.plugins = ["transform-object-rest-spread","transform-class-properties"]
+    });
 
 module.exports = Encore.getWebpackConfig();

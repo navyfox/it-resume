@@ -12,10 +12,15 @@
     "build": "encore production"
   },
   "dependencies": {
+    "@material-ui/core": "^1.4.1",
+    "axios": "^0.18.0",
+    "babel-plugin-transform-class-properties": "^6.24.1",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "material-ui": "^0.20.0",
     "prop-types": "^15.6.0",
-    "react": "^16.2.0",
-    "react-dom": "^16.2.0",
-    "react-select": "^2.0.0-beta.7"
+    "react": "^16.4.0",
+    "react-dom": "^16.4.0",
+    "react-select": "^2.0.0-beta.7",
+    "yarn-upgrade-all": "^0.3.0"
   }
 }
