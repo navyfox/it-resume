@@ -1,39 +1,14 @@
 # Test API endpoints
-
-test_api.get:
-  path: 'api_v2/get.json'
-  defaults: { _controller: '\Drupal\api_v2\Controller\TestAPIController::get_example' }
-  methods:  [GET]
-  requirements:
-    _access: 'TRUE'
-
-test_api.put:
-  path: 'api_v2/put.json'
-  defaults: { _controller: '\Drupal\api_v2\Controller\TestAPIController::put_example' }
-  methods:  [PUT]
-  requirements:
-    _access: 'TRUE'
-
-test_api.delete:
-  path: 'api_v2/delete.json'
-  defaults: { _controller: '\Drupal\api_v2\Controller\TestAPIController::delete_example' }
-  methods:  [DELETE]
-  requirements:
-    _access: 'TRUE'
-
-
-
-
-api_resume.get:
+api_resume.get_resume:
   path: 'api_v2/resume'
   defaults: { _controller: '\Drupal\api_v2\Controller\TestAPIController::get_resume' }
   methods:  [GET]
   requirements:
       _access: 'TRUE'
 
-api_resume.getItem:
+api_resume.get_item_resume:
   path: 'api_v2/resume/{node}'
-  defaults: { _controller: '\Drupal\api_v2\Controller\TestAPIController::get_node' }
+  defaults: { _controller: '\Drupal\api_v2\Controller\TestAPIController::get_item_resume' }
   methods:  [GET]
   options:
       parameters:
@@ -42,14 +17,14 @@ api_resume.getItem:
   requirements:
       _access: 'TRUE'
 
-api_resume.post:
+api_resume.post_new_resume:
   path: 'api_v2/resume'
   defaults: { _controller: '\Drupal\api_v2\Controller\TestAPIController::post_resume' }
   methods:  [POST]
   requirements:
     _access: 'TRUE'
 
-api_resume_edit.put:
+api_resume.put__edit__resume:
   path: 'api_v2/resume/{node}'
   defaults: { _controller: '\Drupal\api_v2\Controller\TestAPIController::edit_resume' }
   methods:  [PUT]
@@ -60,30 +35,16 @@ api_resume_edit.put:
   requirements:
       _access: 'TRUE'
 
-api_skills_tag.get:
-  path: 'api_v2/tag'
-  defaults: { _controller: '\Drupal\api_v2\Controller\TestAPIController::get_tag' }
-  methods:  [GET]
-  requirements:
-    _access: 'TRUE'
-
-api_skills.get:
-  path: 'api_v2/skills'
-  defaults: { _controller: '\Drupal\api_v2\Controller\TestAPIController::get_skills' }
-  methods:  [GET]
-  requirements:
-    _access: 'TRUE'
-
-api_skills_search.get:
+api_search.get_skill_tags_by_substring_for_a_name:
   path: 'api_v2/terms'
-  defaults: { _controller: '\Drupal\api_v2\Controller\TestAPIController::search_terms_name_by_substring' }
+  defaults: { _controller: '\Drupal\api_v2\Controller\TestAPIController::search_skill_tags_by_substring_for_a_name' }
   methods:  [GET]
   requirements:
     _access: 'TRUE'
 
-api_search.put:
+api_search.get_resume_by_id_skill_tags:
   path: 'api_v2/search'
-  defaults: { _controller: '\Drupal\api_v2\Controller\TestAPIController::search' }
-  methods:  [PUT]
+  defaults: { _controller: '\Drupal\api_v2\Controller\TestAPIController::search_resume_by_id_skill_tags' }
+  methods:  [POST]
   requirements:
     _access: 'TRUE'

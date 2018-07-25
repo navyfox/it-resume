@@ -11,3 +11,7 @@ html {
     display: flex;
     flex-direction: column;
 }
+
+.basic-multi-select {
+    z-index: 100;
+}

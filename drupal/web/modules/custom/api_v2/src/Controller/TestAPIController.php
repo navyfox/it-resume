@@ -124,14 +124,10 @@ class TestAPIController extends ControllerBase {
     return new JsonResponse($response, 200);
   }
 
-
-
-
   /**
    * Get item resume
    */
-  public function get_node (NodeInterface $node) {
-//    $node = Node::load($data['uid']);
+  public function get_item_resume (NodeInterface $node) {
     $response_item = [
         'id'    => $node->id(),
         'title' => $node->label(),
@@ -150,16 +146,16 @@ class TestAPIController extends ControllerBase {
   }
 
   /**
-   * Search items resume
+   * Search items resume by id tags
    */
-  public function search (Request $request)
-  {
+  public function search_resume_by_id_skill_tags (Request $request) {
 
+    // This condition checks the `Content-type` and makes sure to
+    // decode JSON string from the request body into array.
     if ( 0 === strpos( $request->headers->get( 'Content-Type' ), 'application/json' ) ) {
       $data = json_decode( $request->getContent(), TRUE );
       $request->request->replace( is_array( $data ) ? $data : [] );
     }
-//    $node = Node::load($data['uid']);
     $response = [
         'items' => [],
         'next_page' => FALSE,
@@ -172,20 +168,9 @@ class TestAPIController extends ControllerBase {
     $limit = $request_query->get('limit') ?: $this->limit;
     $page = $request_query->get('page') ?: 0;
 
-
-
     $query_array = $data['skills_tags'];
 
-    $query = \Drupal::entityQuery('node')
-        ->condition('type', 'resume');
-
-    foreach ($query_array as $id_tag ) {
-      $and = $query->andConditionGroup();
-      $and->condition('field_tags', $id_tag);
-      $query->condition($and);
-    }
-
-//    $result = $query->execute();
+    $query = $this->sql_query_resume_by_array_id_tags($query_array);
 
     // Find out how many articles do we have.
     $articles_count = $query->count()->execute();
@@ -198,7 +183,6 @@ class TestAPIController extends ControllerBase {
           ->toString(TRUE)
           ->getGeneratedUrl();
     }
-
     if ($page > 0) {
       $prev_page_query = $request_query_array;
       $prev_page_query['page'] = $page - 1;
@@ -207,33 +191,14 @@ class TestAPIController extends ControllerBase {
           ->toString(TRUE)
           ->getGeneratedUrl();
     }
-//TODO
+
     // Find articles.
-//    $new_query = $query->pager($limit);
-
-    $query = \Drupal::entityQuery('node')
-        ->condition('type', 'resume');
-
-    foreach ($query_array as $id_tag ) {
-      $and = $query->andConditionGroup();
-      $and->condition('field_tags', $id_tag);
-      $query->condition($and);
-    }
+    $query = $this->sql_query_resume_by_array_id_tags($query_array);
 
     $result = $query->pager($limit)->execute();
-//    dump($result); die();
     $articles = \Drupal::entityTypeManager()
         ->getStorage('node')
         ->loadMultiple($result);
-
-//    dump($articles); die();
-
-
-
-
-//    $articles = \Drupal::entityTypeManager()
-//        ->getStorage('node')
-//        ->loadMultiple($result);
 
     // Create Response
     /** @var \Drupal\node\Entity\Node $article */
@@ -256,6 +221,18 @@ class TestAPIController extends ControllerBase {
     return new JsonResponse( $response );
   }
 
+  private function sql_query_resume_by_array_id_tags(array $query_array) {
+    $query = \Drupal::entityQuery('node')
+        ->condition('type', 'resume');
+
+    foreach ($query_array as $id_tag ) {
+      $and = $query->andConditionGroup();
+      $and->condition('field_tags', $id_tag);
+      $query->condition($and);
+    }
+    return $query;
+  }
+
 
   /**
    * Create new resume.
@@ -268,16 +245,8 @@ class TestAPIController extends ControllerBase {
       $request->request->replace( is_array( $data ) ? $data : [] );
     }
 
-
+//TODO post method
     $name_tag = 'term name that you want to add';
-
-    function _create_term($name,$taxonomy_type) {
-      $term = Term::create([
-          'name' => $name,
-          'vid' => $taxonomy_type,
-      ])->save();
-      return TRUE;
-    }
 
     $response['status'] = true;
     $response['method'] = 'POST';
@@ -299,7 +268,7 @@ class TestAPIController extends ControllerBase {
     $terms = taxonomy_term_load_multiple_by_name($cat);
     $ctids = array();
     if($terms == NULL) { //Create term and use
-      $created = _create_term($cat,'skills_tag');
+      $created = $this->_create_skills_tag($cat);
       if($created) {
 //finding term by name
         $newTerm = taxonomy_term_load_multiple_by_name($cat);
@@ -315,126 +284,44 @@ class TestAPIController extends ControllerBase {
 
 
   /**
-   * Get tag.
+   * @param $name
+   * @return bool
    */
-  public function get_tag() {
-
-    $request = \Drupal::request();
-    $query = $request->query->get('query');
-
-    function _create_term($name,$taxonomy_type) {
-      $term = Term::create([
-          'name' => $name,
-          'vid' => $taxonomy_type,
-      ])->save();
-      return TRUE;
-    }
-
-    $cat = $query;
-    $terms = taxonomy_term_load_multiple_by_name($cat);
-    $ctids = array();
-    if($terms == NULL) { //Create term and use
-      $created = _create_term($cat,'skills_tag');
-      if($created) {
-//finding term by name
-        $newTerm = taxonomy_term_load_multiple_by_name($cat);
-        foreach($newTerm as $key => $term) {
-          $ctids[] = $key;
-        }
-      }
-    }
-
-    $response['status'] = true;
-    $response['method'] = 'GET';
-
-    return new JsonResponse( $ctids );
+  private function _create_skills_tag($name) {
+    $term = Term::create([
+        'name' => $name,
+        'vid' => 'skills_tag',
+    ])->save();
+    return TRUE;
   }
 
   /**
-   * Get skills id if create.
+   * Get search tags name and id by substring for a name.
    */
-  public function get_skills() {
-
+  public function search_skill_tags_by_substring_for_a_name() {
     $request = \Drupal::request();
     $query = $request->query->get('query');
 
-    $cat = $query;
-    $terms = taxonomy_term_load_multiple_by_name($cat);
-    $ctids = array();
-//    $newTerm = taxonomy_term_load_multiple_by_name($cat);
-    foreach($terms as $key => $term) {
-      $ctids[] = $key;
-    }
-
-    $response['status'] = true;
-    $response['method'] = 'GET';
-
-    return new JsonResponse( $ctids );
-  }
-
-  /**
-   * Callback for `my-api/get.json` API method.
-   */
-  public function get_example( Request $request ) {
-
-    $response['data'] = 'Some test data to return';
-    $response['method'] = 'GET';
-
-    return new JsonResponse( $response );
-  }
-
-  /**
-   * Get search terms name and id by substring.
-   */
-  public function search_terms_name_by_substring() {
-
-    $request = \Drupal::request();
-    $query = $request->query->get('query');
-
-    $result = \Drupal::entityQuery('taxonomy_term')
+    $sql_query = \Drupal::entityQuery('taxonomy_term')
         ->condition('name', "$query%", 'LIKE')
         ->condition('vid', 'skills_tag')
         ->execute();
 
     $terms = \Drupal::entityTypeManager()
         ->getStorage('taxonomy_term')
-        ->loadMultiple($result);
+        ->loadMultiple($sql_query);
 
-
-
-//    $cat = $query;
-//    $terms = taxonomy_term_load_multiple_by_name($cat);
-    $ctids = array();
-//    $newTerm = taxonomy_term_load_multiple_by_name($cat);
+    $response = array();
     foreach($terms as $key => $term) {
       $item = array(
         'value' => $key,
         'label' => $term->getName()
       );
-      $ctids['terms'][] = $item;
+      $response['terms'][] = $item;
     }
-
-//    $response['status'] = true;
-//    $response['method'] = 'GET';
-
-    return new JsonResponse( $ctids );
-  }
-
-
-
-
-  /**
-   * Callback for `my-api/put.json` API method.
-   */
-  public function put_example( Request $request ) {
-
-    $response['data'] = 'Some test data to return';
-    $response['method'] = 'PUT';
 
     return new JsonResponse( $response );
   }
-
-
 
   /**
    * Callback for `my-api/edit` API method.
@@ -447,25 +334,15 @@ class TestAPIController extends ControllerBase {
       $request->request->replace( is_array( $data ) ? $data : [] );
     }
 
+    //TODO edit method
+
     $node->title = $data['title'];
     $node->body = $data['body'];
     $node->field_name = $data['field_name'];
-//    $node->field_name = $data['field_name'];
     $node->save();
 
     $response['status'] = true;
     $response['method'] = 'POST';
-
-    return new JsonResponse( $response );
-  }
-
-  /**
-   * Callback for `my-api/delete.json` API method.
-   */
-  public function delete_example( Request $request ) {
-
-    $response['data'] = 'Some test data to return';
-    $response['method'] = 'DELETE';
 
     return new JsonResponse( $response );
   }
