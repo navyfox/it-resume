@@ -25,6 +25,8 @@ class App extends React.Component {
             options: [],
             selectedOption: '',
             searchId: [],
+            page: 0,
+            next_page: false,
         };
     }
 
@@ -58,7 +60,7 @@ class App extends React.Component {
         });
     };
 
-    componentDidMount() {
+    //componentDidMount() {
         //fetch('/data')
         //  .then(response => response.json())
         //  .then(entries => {
@@ -74,19 +76,49 @@ class App extends React.Component {
         //              options: obj.options
         //          });
         //      });
-    }
+    //}
 
     searchResume = () => {
-        const inputValue = 0;
-        const url = `http://cms.it-resume.local:8080/api_v2/search?page=${inputValue}`;
+        this.setState({page: 0});
+        const url = `http://cms.it-resume.local:8080/api_v2/search?page=${this.state.page}`;
 
         let request = {'skills_tags': this.state.searchId};
         return axios.put(url, request).then(function (response) {
             // handle success
             console.log('RESP', response.data);
+            //console.log('next_page', response.data.next_page);
+            //if(response.data.next_page == 0) {
+            //    console.log('next_page_search', response.data.next_page);
+            //    this.setState({next_page: response.data.next_page});
+            //}
+            return response.data;
+        }).then((items) => {
+            this.setState({next_page: items.next_page});
+            this.setState({entries: items.items});
+        });
+    };
+
+    nextPageResume = () => {
+        //let nextPage = this.state.page + 1;
+        //this.setState({page: nextPage});
+        console.log('next_page', this.state.next_page);
+
+        if(this.state.next_page === false) {
+            return undefined;
+        }
+        const url = `http://cms.it-resume.local:8080${this.state.next_page}`;
+
+        let request = {'skills_tags': this.state.searchId};
+        return axios.put(url, request).then((response) => {
+            // handle success
+            console.log('RESP', response.data);
+            this.setState({next_page: response.data.next_page});
             return response.data.items;
         }).then((items) => {
-            this.setState({entries: items});
+            let newItems = [...this.state.entries,...items];
+            //newItems = []
+            //newItems.push(items);
+            this.setState({entries: newItems});
         });
     };
 
@@ -112,7 +144,7 @@ class App extends React.Component {
                     <Button variant="contained" size="medium" color="primary" onClick={this.searchResume}>
                         GO
                     </Button>
-                    <div style={{ display: 'flex' }}>
+                    <div className="item">
                         {
                             this.state.entries.map(
                                 ({ id, name, title, text }) => {
@@ -134,6 +166,9 @@ class App extends React.Component {
                             )
                         }
                     </div>
+                    <Button variant="contained" size="medium" color="primary" onClick={this.nextPageResume}>
+                        MORE
+                    </Button>
                 </div>
             </MuiThemeProvider>
         );
