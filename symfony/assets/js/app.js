@@ -1,23 +1,26 @@
-//import '../css/app.css';
 import React from 'react';
-import ReactDOM from 'react-dom';
 import {Switch, Route} from 'react-router-dom';
-import SearchResumePage from './Components/SearchResumePage';
+import MenuBar from './Components/MenuBar';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import Main from './Main';
 
 
 class App extends React.Component {
-    //constructor() {
-    //    super(props);
-    //    this.state = {
-    //    };
-    //}
+    constructor() {
+        super();
+        this.state = {};
+    }
 
     render() {
         return (
-            <Switch>
-                <Route exact path='/search' component={SearchResumePage}/>
-            </Switch>
+            <MuiThemeProvider>
+                <div>
+                    <MenuBar/>
+                    <Main/>
+                </div>
+            </MuiThemeProvider>
         );
     }
 }
+
 export default App;

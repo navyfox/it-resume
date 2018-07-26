@@ -38,7 +38,7 @@ class TestAPIController extends ControllerBase {
   /**
    * Default limit entities per request.
    */
-  protected $limit = 2;
+  protected $limit = 16;
 
   /**
    * {@inheritdoc}
@@ -125,14 +125,41 @@ class TestAPIController extends ControllerBase {
   }
 
   /**
+   * Generated Url image
+   */
+  private function generated_url_images (NodeInterface $node) {
+    $file = $node->field_ava->entity;
+    if ($file) {
+      $url = \Drupal\image\Entity\ImageStyle::load('original')->buildUrl($file->getFileUri());
+      return $url;
+    } else {
+      return "http://cms.it-resume.local:8080/sites/default/files/2018-07/trump.png";
+    }
+  }
+  /**
+   * Generated relative Url image
+   */
+  private function generated_relative_url_images (NodeInterface $node) {
+    $file = $node->field_ava->entity;
+    if ($file) {
+      $url = \Drupal\image\Entity\ImageStyle::load('original')->buildUrl($file->getFileUri());
+      return file_url_transform_relative($url);
+    } else {
+      return NULL;
+    }
+  }
+
+  /**
    * Get item resume
    */
   public function get_item_resume (NodeInterface $node) {
+    $image = $this->generated_url_images($node);
     $response_item = [
         'id'    => $node->id(),
         'title' => $node->label(),
         'text'  => $node->field_text->value,
         'name' => $node->field_name->value,
+        'image' => $image,
     ];
     foreach($node->field_tags->getIterator() as $tagItem) {
       $term = Term::load($tagItem->target_id);
@@ -141,7 +168,7 @@ class TestAPIController extends ControllerBase {
           'name' => $term->getName(),
       ];
     }
-    $response['items'][] = $response_item ;
+    $response['item'] = $response_item ;
     return new JsonResponse( $response );
   }
 
@@ -195,7 +222,7 @@ class TestAPIController extends ControllerBase {
     // Find articles.
     $query = $this->sql_query_resume_by_array_id_tags($query_array);
 
-    $result = $query->pager($limit)->execute();
+    $result = $query->sort('created', 'DESC')->pager($limit)->execute();
     $articles = \Drupal::entityTypeManager()
         ->getStorage('node')
         ->loadMultiple($result);
@@ -203,11 +230,13 @@ class TestAPIController extends ControllerBase {
     // Create Response
     /** @var \Drupal\node\Entity\Node $article */
     foreach ($articles as $article) {
+      $image = $this->generated_url_images($article);
       $response_item = [
           'id'    => $article->id(),
           'title' => $article->label(),
           'text'  => $article->field_text->value,
           'name' => $article->field_name->value,
+          'image' => $image,
       ];
       foreach($article->field_tags->getIterator() as $tagItem) {
         $term = Term::load($tagItem->target_id);

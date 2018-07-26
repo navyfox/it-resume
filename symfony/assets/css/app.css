@@ -1,17 +1,44 @@
 html {
     font-family: Arial, Helvetica, sans-serif;
 }
+body {
+    margin: 0;
+}
 
 .footer {
     display: flex;
     justify-content: center;
 }
 
-.item {
-    display: flex;
-    flex-direction: column;
+.search-title {
+    align-self: center;
 }
 
-.basic-multi-select {
-    z-index: 100;
+.search-title__text {
+    text-align: right;
 }
+
+.search-button{
+    min-width: 100px!important;
+    min-height: 38px!important;
+    padding: 8px 24px!important;
+    font-size: 0.9375rem!important;
+}
+
+.search__div-container-button-more {
+    text-align: center;
+}
+.link-button {
+    text-decoration: none;
+}
+.chip{
+    margin: 10px;
+}
+/*.item {*/
+    /*display: flex;*/
+    /*flex-direction: column;*/
+/*}*/
+
+/*.basic-multi-select {*/
+    /*z-index: 100;*/
+/*}*/

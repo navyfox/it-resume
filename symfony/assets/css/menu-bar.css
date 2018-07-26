@@ -1,0 +1,14 @@
+/*.menu-bar__button-login{*/
+    /*flex-grow: 1;*/
+/*}*/
+.menu-bar__div-container {
+    flex-grow: 1;
+    margin-bottom: 20px;
+}
+.menu-bar__tittle {
+    flex-grow: 1;
+}
+.menu-bar__button-icon-menu {
+    margin-left: -12px;
+    margin-right: 20px;
+}
