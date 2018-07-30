@@ -12,3 +12,23 @@
     margin-left: -12px;
     margin-right: 20px;
 }
+.text-field-login {
+    width: 100%;
+}
+.text-field-edit {
+    width: 100%;
+}
+.text-field-login__container{
+    min-width: 300px;
+}
+.text-field-edit__container {
+    min-width: 500px;
+}
+
+.link-button__login{
+    text-decoration-color: white;
+}
+
+.field-image{
+    display: none;
+}

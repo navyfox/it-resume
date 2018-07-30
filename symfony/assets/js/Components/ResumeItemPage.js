@@ -6,6 +6,7 @@ import Chip from '@material-ui/core/Chip';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {getResumeItem} from "../reducers/resumeItem";
+import MenuBar from "./MenuBar";
 
 class ResumeItemPage extends React.Component {
     constructor(props) {
@@ -43,20 +44,23 @@ class ResumeItemPage extends React.Component {
 
     render() {
         return (
-            <Grid item xs={12}>
-                <Grid container justify="center" spacing={16}>
-                    <Grid item xs={3} zeroMinWidth>
-                        <Card>
-                            <CardHeader title={this.state.name} avatar={this.state.image}/>
-                            <CardTitle title={this.state.title}/>
-                            <CardText>{this.state.text}</CardText>
-                            {this.state.field_tags.map(({id, name}) => (
-                                <Chip className="chip" key={id} label={name}/>
-                            ))}
-                        </Card>
+            <div>
+                <MenuBar history={this.props.history}/>
+                <Grid item xs={12}>
+                    <Grid container justify="center" spacing={16}>
+                        <Grid item xs={3} zeroMinWidth>
+                            <Card>
+                                <CardHeader title={this.state.name} avatar={this.state.image}/>
+                                <CardTitle title={this.state.title}/>
+                                <CardText>{this.state.text}</CardText>
+                                {this.state.field_tags.map(({id, name}) => (
+                                    <Chip className="chip" key={id} label={name}/>
+                                ))}
+                            </Card>
+                        </Grid>
                     </Grid>
                 </Grid>
-            </Grid>
+            </div>
         );
     }
 }

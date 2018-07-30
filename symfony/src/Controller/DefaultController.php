@@ -5,9 +5,21 @@ namespace App\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
+use GuzzleHttp\Client;
+use GuzzleHttp\ClientInterface;
+use Psr\Http\Message\ResponseInterface;
+use Symfony\Bridge\PsrHttpMessage\Factory\DiactorosFactory;
+use Symfony\Bridge\PsrHttpMessage\Factory\HttpFoundationFactory;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\HttpFoundation\HeaderBag;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use GuzzleHttp\Psr7\Response;
 
 class DefaultController extends Controller
 {
+
+
     /**
      * @Route("/{reactRouting}", name="index", requirements={"reactRouting"="^(?!api).+"}, defaults={"reactRouting": null})
      */
@@ -47,13 +59,14 @@ class DefaultController extends Controller
 //    }
 //
 //
-//    /**
-//     * @Route("/test", name="test")
-//     */
-//    public function testAction()
-//    {
-//        return new JsonResponse([
-//            'options' => ['Red', 'eee', 'refewf', 'fewfsd', 'cccccc']
-//        ]);
-//    }
+    /**
+     * @Route("/api", name="test")
+     */
+    public function testAction()
+    {
+        $client = new Client(['base_uri' => 'http://cms.it-resume.local:8080/api_v2/', 'timeout' => 2.0]);
+        // Send a request to http://my.api.url/site/67/module/1449/item
+        $response = $client->request('GET', 'resume/40')->getBody()->getContents();
+        return new JsonResponse($response);
+    }
 }
