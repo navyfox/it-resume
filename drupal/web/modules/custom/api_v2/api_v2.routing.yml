@@ -48,3 +48,10 @@ api_search.get_resume_by_id_skill_tags:
   methods:  [POST]
   requirements:
     _access: 'TRUE'
+
+api_search.get_resume_id_created_by_a_user:
+  path: 'api_v2/resume_by_user'
+  defaults: { _controller: '\Drupal\api_v2\Controller\TestAPIController::find_resume_id_created_by_a_user' }
+  methods:  [GET]
+  requirements:
+    _access: 'TRUE'

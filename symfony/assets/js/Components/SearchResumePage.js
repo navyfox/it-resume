@@ -12,8 +12,8 @@ import Typography from '@material-ui/core/Typography';
 import MenuBar from "./MenuBar";
 
 class SearchResumePage extends React.Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = {
             entries: [],
             options: [],
@@ -107,6 +107,7 @@ class SearchResumePage extends React.Component {
                                     loadOptions={this.getTerms}
                                     className="basic-multi-select select"
                                     classNamePrefix="select"
+                                    placeholder="Skills..."
                                 />
                             </Grid>
                             <Grid item xs={1}>

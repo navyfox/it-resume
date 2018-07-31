@@ -13,29 +13,47 @@ import {Link} from 'react-router-dom';
 import IconButton from '@material-ui/core/IconButton';
 import PhotoCamera from '@material-ui/icons/PhotoCamera';
 import MenuBar from "./MenuBar";
+import AsyncCreatableSelect from 'react-select/lib/AsyncCreatable';
+import AsyncSelect from 'react-select/lib/Async';
 
 class ChangeResumePage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            id: '',
             title: '',
             text: '',
             name: '',
             image: '',
-            multiline: '',
-            field_tags: [],
+            selectedOption: undefined,
+            optionalID: [],
         };
     };
-
-    componentDidMount() {
-
-    }
 
     handleChange = name => event => {
         this.setState({
             [name]: event.target.value,
         });
+    };
+
+    handleSelectChange = (option) => {
+        this.setState({ selectedOption: option, optionalID: option.map(i => i.value) });
+    };
+
+    filterColors = (inputValue, terms) =>
+        terms.filter(i => i.label.toLowerCase().includes(inputValue.toLowerCase())
+        );
+
+    getTerms = (inputValue) => {
+        const url = `http://cms.it-resume.local:8080/api_v2/terms?query=${inputValue}`;
+        return axios.get(url).then(response => {
+            return response.data.terms;
+        }).then((terms) => {
+            return this.filterColors(inputValue, terms)
+        });
+    };
+
+    isValidNewOption = (inputValue, selectValue, selectOptions) => {
+        return !(inputValue.trim().length === 0 || selectOptions.find(option => option.name === inputValue));
     };
 
     render() {
@@ -56,10 +74,10 @@ class ChangeResumePage extends React.Component {
                                 />
                             </Grid>
                             <Grid item className="text-field-edit__container">
-                                <input accept="image/*" className="field-image" id="icon-button-file" type="file" />
+                                <input accept="image/*" className="field-image" id="icon-button-file" type="file"/>
                                 <label htmlFor="icon-button-file">
-                                    <IconButton color="primary"  component="span">
-                                        <PhotoCamera />
+                                    <IconButton color="primary" component="span">
+                                        <PhotoCamera/>
                                     </IconButton>
                                 </label>
                             </Grid>
@@ -68,8 +86,8 @@ class ChangeResumePage extends React.Component {
                                     id="title"
                                     label="Title"
                                     className="text-field-edit"
-                                    value={this.state.name}
-                                    onChange={this.handleChange('name')}
+                                    value={this.state.title}
+                                    onChange={this.handleChange('title')}
                                     margin="normal"
                                 />
                             </Grid>
@@ -79,14 +97,28 @@ class ChangeResumePage extends React.Component {
                                     label="Description"
                                     multiline
                                     rowsMax="8"
-                                    value={this.state.multiline}
+                                    value={this.state.text}
                                     className="text-field-edit"
-                                    onChange={this.handleChange('multiline')}
+                                    onChange={this.handleChange('text')}
                                     margin="normal"
                                 />
                             </Grid>
-                            <Grid item >
-                                <Button variant="contained" size="medium" color="primary" onClick={() => this.props.history.push("/login")}>
+                            <Grid item className="text-field-edit__container">
+                                <AsyncCreatableSelect
+                                    isMulti
+                                    onChange={this.handleSelectChange}
+                                    isValidNewOption={this.isValidNewOption}
+                                    cacheOptions
+                                    defaultOptions
+                                    loadOptions={this.getTerms}
+                                    className="basic-multi-select select"
+                                    classNamePrefix="select"
+                                    placeholder="My skills..."
+                                />
+                            </Grid>
+                            <Grid item>
+                                <Button variant="contained" size="medium" color="primary"
+                                        onClick={() => this.props.history.push("/login")}>
                                     SEND
                                 </Button>
                             </Grid>
