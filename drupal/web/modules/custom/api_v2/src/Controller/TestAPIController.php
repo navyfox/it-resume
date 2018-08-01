@@ -301,8 +301,7 @@ class TestAPIController extends ControllerBase
             $request->request->replace(is_array($data) ? $data : []);
         }
 
-//TODO post method
-        $name_tag = 'term name that you want to add';
+//TODO add image
 
         $response['status'] = true;
         $response['method'] = 'POST';
@@ -312,29 +311,34 @@ class TestAPIController extends ControllerBase
             'title' => $data['title'],
             'field_text' => $data['text'],
             'field_name' => $data['name'],
-//        'field_tags' => array(
-//            array( 'target_id' => $data['tags'] ),
-//        ),
-//        'field_tags'  => $data['tags'],
         ]);
-        $node->set('field_tags', $data['tags']);
-        $node->save();
 
+        $id_array = array();
+        $new_name_array = array();
+        $new_id_array = array();
 
-        $cat = 'brrr... winter is comming';
-        $terms = taxonomy_term_load_multiple_by_name($cat);
-        $ctids = array();
-        if ($terms == NULL) { //Create term and use
-            $created = $this->_create_skills_tag($cat);
-            if ($created) {
-//finding term by name
-                $newTerm = taxonomy_term_load_multiple_by_name($cat);
-                foreach ($newTerm as $key => $term) {
-                    $ctids[] = $key;
-                }
+        foreach ($data['skills'] as $id_skills) {
+            if(is_string($id_skills)) {
+                $new_name_array[] = $id_skills;
+            } else {
+                $id_array[] = $id_skills;
             }
         }
+        foreach($id_array as $id_skill) {
+            $node->field_tags[] = ['target_id' => $id_skill];
+        }
+        foreach($new_name_array as $name_skill) {
+            $id = $this->create_skills_tag($name_skill);
+            $new_id_array[] = $id;
+        }
+        foreach($new_id_array as $id_skill) {
+            $node->field_tags[] = ['target_id' => $id_skill];
+        }
 
+        $node->save();
+
+        $response['id'][] = $id_array;
+        $response['name-array'][] = $new_name_array;
 
         return new JsonResponse($response);
     }
