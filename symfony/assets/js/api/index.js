@@ -56,4 +56,48 @@ export class Api {
         });
     };
 
+    static postResume = (state) => {
+        const url = `http://cms.it-resume.local:8080/api_v2/resume`;
+
+        const { id, title, text, name, optionalID} = state;
+        return axios({
+            method: 'post',
+            url: url,
+            headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
+            xsrfHeaderName: 'X-CSRF-Token',
+            withCredentials: true,
+            data: {
+                id: id,
+                title: title,
+                text: text,
+                name: name,
+                skills: optionalID,
+            }
+        }).then(response => {
+            return response.status === 200;
+        });
+    };
+
+
+    static editResume = (state) => {
+        const { id, title, text, name, optionalID} = state;
+        const url = `http://cms.it-resume.local:8080/api_v2/resume/${id}`;
+        return axios({
+            method: 'put',
+            url: url,
+            headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
+            xsrfHeaderName: 'X-CSRF-Token',
+            withCredentials: true,
+            data: {
+                id: id,
+                title: title,
+                text: text,
+                name: name,
+                skills: optionalID,
+            }
+        }).then(response => {
+            return response.status === 200;
+        });
+    };
+
 }

@@ -14,20 +14,52 @@ import IconButton from '@material-ui/core/IconButton';
 import PhotoCamera from '@material-ui/icons/PhotoCamera';
 import MenuBar from "./MenuBar";
 import AsyncCreatableSelect from 'react-select/lib/AsyncCreatable';
-import AsyncSelect from 'react-select/lib/Async';
+import {Api} from '../api';
 
 class ChangeResumePage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            id: '',
             title: '',
             text: '',
             name: '',
             image: '',
             selectedOption: undefined,
             optionalID: [],
+            load: false,
+            isEdit: false
         };
     };
+
+    componentDidMount() {
+        const url = `http://cms.it-resume.local:8080/api_v2/resume_by_user`;
+
+        axios.get(url, {withCredentials: true}).then(response => {
+            return response.data;
+        }).then(data => {
+            if (data.isFind) {
+                const item = data.items[0];
+                this.setState({
+                    id: item.id,
+                    title: item.title,
+                    text: item.text,
+                    name: item.name,
+                    image: item.image,
+                    field_tags: item.field_tags,
+                    optionalID: item.field_tags.map(i => i.value),
+                    isEdit: true,
+                });
+            } else {
+                this.setState({isEdit: false});
+            }
+            return data;
+        }).then(data => {
+            this.setState({
+                load: true,
+            });
+        });
+    }
 
     handleChange = name => event => {
         this.setState({
@@ -36,7 +68,16 @@ class ChangeResumePage extends React.Component {
     };
 
     handleSelectChange = (option) => {
-        this.setState({ selectedOption: option, optionalID: option.map(i => i.value) });
+        this.setState({selectedOption: option, optionalID: option.map(i => i.value)});
+    };
+
+    handleSave = () => {
+        if (!this.state.isEdit) {
+            Api.postResume(this.state);
+        } else {
+            Api.editResume(this.state);
+        }
+        this.props.history.push("/");
     };
 
     filterColors = (inputValue, terms) =>
@@ -57,6 +98,14 @@ class ChangeResumePage extends React.Component {
     };
 
     render() {
+        console.log('id', this.state.optionalID);
+        if (!this.state.load) {
+            return (<div>
+                <MenuBar history={this.props.history}/>
+                <Grid container>
+                </Grid>
+            </div>);
+        }
         return (
             <div>
                 <MenuBar history={this.props.history}/>
@@ -110,6 +159,7 @@ class ChangeResumePage extends React.Component {
                                     isValidNewOption={this.isValidNewOption}
                                     cacheOptions
                                     defaultOptions
+                                    defaultValue={this.state.field_tags}
                                     loadOptions={this.getTerms}
                                     className="basic-multi-select select"
                                     classNamePrefix="select"
@@ -118,8 +168,8 @@ class ChangeResumePage extends React.Component {
                             </Grid>
                             <Grid item>
                                 <Button variant="contained" size="medium" color="primary"
-                                        onClick={() => this.props.history.push("/login")}>
-                                    SEND
+                                        onClick={this.handleSave}>
+                                    SAVE
                                 </Button>
                             </Grid>
                         </Grid>

@@ -483,6 +483,7 @@ class TestAPIController extends ControllerBase
         $result = $query
             ->condition('type', 'resume')
             ->condition('uid', $uid)
+            ->sort('created', 'DESC')
             ->execute();
 
         $articles = \Drupal::entityTypeManager()
@@ -503,11 +504,17 @@ class TestAPIController extends ControllerBase
             foreach ($article->field_tags->getIterator() as $tagItem) {
                 $term = Term::load($tagItem->target_id);
                 $response_item['field_tags'][] = [
-                    'id' => $term->id(),
-                    'name' => $term->getName(),
+                    'value' => (integer) $term->id(),
+                    'label' => $term->getName(),
                 ];
             }
             $response['items'][] = $response_item;
+        }
+
+        if (empty($articles)) {
+            $response['isFind'] = false;
+        } else {
+            $response['isFind'] = true;
         }
 
         return new JsonResponse($response, 200);
