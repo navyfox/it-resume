@@ -27,6 +27,7 @@
         "drupal/cors": "^1.0",
         "drupal/devel": "^1.2",
         "drupal/entity": "^1.9",
+        "drupal/file_entity": "^2.0",
         "drupal/restui": "^1.15",
         "drupal/search_api": "^1.9",
         "drush/drush": "^9.0.0",

@@ -6,6 +6,7 @@ import ResumeItemPage from './Components/ResumeItemPage';
 import LoginPage from './Components/LoginPage';
 import SignUpPage from './Components/SignUpPage';
 import ChangeResumePage from "./Components/ChangeResumePage";
+import TestImageUploadPage from "./Components/TestImageUploadPage";
 
 
 class App extends React.Component {
@@ -23,7 +24,8 @@ class App extends React.Component {
                     <Route path='/resume/:number' component={ResumeItemPage}/>
                     <Route exact path='/login' component={LoginPage}/>
                     <Route exact path='/signup' component={SignUpPage}/>
-                    <Route exact path='/edit' component={ChangeResumePage}/>
+                    <Route exact path='/test' component={ChangeResumePage}/>
+                    <Route exact path='/edit' component={TestImageUploadPage}/>
                 </Switch>
             </MuiThemeProvider>
         );

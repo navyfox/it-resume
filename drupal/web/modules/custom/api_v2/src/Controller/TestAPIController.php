@@ -150,7 +150,7 @@ class TestAPIController extends ControllerBase
             $url = \Drupal\image\Entity\ImageStyle::load('original')->buildUrl($file->getFileUri());
             return $url;
         } else {
-            return "http://cms.it-resume.local:8080/sites/default/files/2018-07/trump.png";
+            return "http://cms.it-resume.local:8080/sites/default/files/2018-08/8.png";
         }
     }
 
@@ -188,9 +188,9 @@ class TestAPIController extends ControllerBase
                 'name' => $term->getName(),
             ];
         }
-        if (!empty($node->field_tags)) {
-            $response_item['field_tags'][] = [];
-        }
+        // if (!empty($node->field_tags)) {
+        //     $response_item['field_tags'][] = [];
+        // }
 
         $response['item'] = $response_item;
         return new JsonResponse($response);
